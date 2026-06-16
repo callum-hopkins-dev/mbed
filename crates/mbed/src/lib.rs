@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, feature(doc_cfg))]
+
 //! # mbed
 //!
 //! Embed and transform assets into your Rust crate.
