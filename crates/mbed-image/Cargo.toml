@@ -1,0 +1,35 @@
+[package]
+name = "mbed-image"
+description = "Embed and transform assets into your Rust crate."
+version = "0.1.0"
+authors = ["Callum Hopkins"]
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/callum-hopkins-dev/mbed"
+readme = "README.md"
+documentation = "https://docs.rs/mbed"
+keywords = ["assets", "embed", "proc-macro", "bundling", "manifest"]
+categories = [
+    "development-tools::build-utils",
+    "development-tools::procedural-macro-helpers",
+    "web-programming",
+    "multimedia::images",
+]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+error = "0.1.9"
+image = "0.25.10"
+mbed-macros = { version = "0.1.0", path = "../mbed-macros" }
+proc-macro2 = { version = "1.0.106", default-features = false }
+quote = { version = "1.0.45", default-features = false }
+serde = { version = "1.0.228", features = ["derive"] }
+tanager = "0.3.0"
+thiserror = "2.0.18"
+
+[features]
+cargo-progress = [ "mbed-macros/cargo-progress" ]
+asm = [ "image/nasm" ]
+avif = [ "image/avif-native" ]

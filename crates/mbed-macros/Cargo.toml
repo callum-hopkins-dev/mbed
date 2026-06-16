@@ -1,0 +1,36 @@
+[package]
+name = "mbed-macros"
+description = "Embed and transform assets into your Rust crate."
+version = "0.1.0"
+authors = ["Callum Hopkins"]
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/callum-hopkins-dev/mbed"
+readme = "README.md"
+documentation = "https://docs.rs/mbed"
+keywords = ["assets", "embed", "proc-macro", "bundling", "manifest"]
+categories = [
+    "development-tools::build-utils",
+    "development-tools::procedural-macro-helpers",
+    "web-programming",
+    "multimedia::images",
+]
+
+[dependencies]
+cargo_metadata = "0.23.1"
+const-hex = { version = "1.19.1", default-features = false, features = ["serde"] }
+nix = { version = "0.31.3", features = ["process"], optional = true }
+proc-macro-crate = "3.5.0"
+proc-macro2 = { version = "1.0.106", features = ["span-locations"] }
+quote = { version = "1.0.45", default-features = false }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
+sha2 = { version = "0.11.0", default-features = false }
+syn = { version = "2.0.117", default-features = false, features = ["parsing", "printing"] }
+tanager = { version = "0.3.0", default-features = false }
+tempfile = "3.27.0"
+typeid = "1.0.3"
+walkdir = "2.5.0"
+
+[features]
+cargo-progress = ["dep:nix"]

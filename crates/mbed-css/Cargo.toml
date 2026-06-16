@@ -1,0 +1,32 @@
+[package]
+name = "mbed-css"
+description = "Embed and transform assets into your Rust crate."
+version = "0.1.0"
+authors = ["Callum Hopkins"]
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/callum-hopkins-dev/mbed"
+readme = "README.md"
+documentation = "https://docs.rs/mbed"
+keywords = ["assets", "embed", "proc-macro", "bundling", "manifest"]
+categories = [
+    "development-tools::build-utils",
+    "development-tools::procedural-macro-helpers",
+    "web-programming",
+    "multimedia::images",
+]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+mbed-macros = { version = "0.1.0", path = "../mbed-macros" }
+nom = { version = "8.0.0", optional = true }
+tanager = "0.3.0"
+thiserror = "2.0.18"
+walkdir = { version = "2.5.0", optional = true }
+which = { version = "8.0.3", optional = true }
+
+[features]
+tailwindcss = ["dep:nom", "dep:walkdir", "dep:which"]
+cargo-progress = ["mbed-macros/cargo-progress"]

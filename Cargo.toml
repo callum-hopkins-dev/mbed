@@ -1,0 +1,3 @@
+[workspace]
+members = ["crates/mbed", "crates/mbed-core", "crates/mbed-image", "crates/mbed-macros", "crates/mbed-css", "crates/mbed-js"]
+resolver = "3"
