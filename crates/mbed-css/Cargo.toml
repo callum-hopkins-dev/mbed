@@ -1,7 +1,20 @@
 [package]
 name = "mbed-css"
+description = "Embed and transform assets into your Rust crate."
 version = "0.1.0"
+authors = ["Callum Hopkins"]
 edition = "2024"
+license = "MIT"
+repository = "https://github.com/callum-hopkins-dev/mbed"
+readme = "README.md"
+documentation = "https://docs.rs/mbed"
+keywords = ["assets", "embed", "proc-macro", "bundling", "manifest"]
+categories = [
+    "development-tools::build-utils",
+    "development-tools::procedural-macro-helpers",
+    "web-programming",
+    "multimedia::images",
+]
 
 [lib]
 proc-macro = true
