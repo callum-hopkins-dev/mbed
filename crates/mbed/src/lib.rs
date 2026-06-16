@@ -796,7 +796,75 @@ pub mod image {
     /// - `image-avif` enables AVIF support and requires `libdav1d`.
     /// - `image-asm` enables assembly optimizations and requires `nasm`.
     ///
+    /// # Syntax
+    ///
+    /// ```rust
+    /// # #[cfg(any())]
+    /// # fn __no_run() {
+    /// mbed::image::include! {
+    ///     path: "../assets/logo.png",
+    ///     format: WebP,
+    ///     compression: Fast,
+    ///     resize: Scale(0.75),
+    /// }
+    /// # }
+    /// ```
+    ///
+    /// The macro accepts a braced list of named fields. The `path` field is
+    /// required; all other fields are optional.
+    ///
+    /// ## Fields
+    ///
+    /// - `path`: Path to the source image file.
+    /// - `format`: Output image format. If omitted, the original image format is
+    ///   preserved.
+    /// - `compression`: Best-effort hint for how the image should be re-encoded.
+    /// - `resize`: Optional resize operation to apply before embedding.
+    ///
+    /// ## Supported formats
+    ///
+    /// `Png`, `Jpeg`, `Gif`, `WebP`, `Pnm`, `Tiff`, `Tga`, `Bmp`, `Ico`, `Hdr`,
+    /// `OpenExr`, `Farbfeld`, `Avif`, and `Qoi`.
+    ///
+    /// AVIF support requires the `image-avif` feature.
+    ///
+    /// ## Supported compression modes
+    ///
+    /// `Fast`, `Best`, `Uncompressed`, and `Balanced`.
+    ///
+    /// Compression is a best-effort hint. Some formats may ignore it or only
+    /// support a subset of compression behavior.
+    ///
+    /// ## Resize syntax
+    ///
+    /// Images can be resized by scale factor:
+    ///
+    /// ```rust
+    /// # #[cfg(any())]
+    /// # fn __no_run() {
+    /// resize: Scale(0.75)
+    /// # }
+    /// ```
+    ///
+    /// Or to exact dimensions:
+    ///
+    /// ```rust
+    /// # #[cfg(any())]
+    /// # fn __no_run() {
+    /// resize: Exact {
+    ///     width: 1024,
+    ///     height: 1024,
+    ///     keep_aspect_ratio: false,
+    /// }
+    /// # }
+    /// ```
+    ///
+    /// When `keep_aspect_ratio` is enabled, the image is resized to fit within the
+    /// requested dimensions without changing its aspect ratio.
+    ///
     /// # Examples
+    ///
+    /// Embed an image using its original format:
     ///
     /// ```rust
     /// # #[cfg(any())]
@@ -808,6 +876,20 @@ pub mod image {
     /// assert_eq!(LOGO.width(), 512);
     /// assert_eq!(LOGO.height(), 512);
     /// let bytes = LOGO.as_bytes();
+    /// # }
+    /// ```
+    ///
+    /// Re-encode, compress, and resize an image:
+    ///
+    /// ```rust
+    /// # #[cfg(any())]
+    /// # fn __no_run() {
+    /// pub const LOGO_WEBP: Artifact<Image> = mbed::image::include! {
+    ///     path: "../assets/logo.png",
+    ///     format: WebP,
+    ///     compression: Fast,
+    ///     resize: Scale(0.75),
+    /// };
     /// # }
     /// ```
     pub use mbed_image::include;
@@ -934,16 +1016,66 @@ pub mod js {
 
     use crate::Artifact;
 
-    /// Bundles JavaScript into an embedded [`Artifact<Bundle>`].
+    /// Bundles and minifies JavaScript into an embedded [`Artifact<Bundle>`].
+    ///
+    /// The embedded artifact includes the bundled JavaScript code and source map.
+    ///
+    /// Bundling and minification are performed using `oxc`.
     ///
     /// Requires the `bundle` feature.
     ///
+    /// # Syntax
+    ///
+    /// The macro accepts either a single JavaScript file path:
+    ///
+    /// ```rust
+    /// # #[cfg(any())]
+    /// # fn __no_run() {
+    /// mbed::js::bundle!("../frontend/app.js")
+    /// # }
+    /// ```
+    ///
+    /// Or a list of JavaScript file paths:
+    ///
+    /// ```rust
+    /// # #[cfg(any())]
+    /// # fn __no_run() {
+    /// mbed::js::bundle![
+    ///     "../frontend/vendor.js",
+    ///     "../frontend/app.js",
+    /// ]
+    /// # }
+    /// ```
+    ///
+    /// Paths are resolved relative to the source file containing the macro
+    /// invocation.
+    ///
+    /// Only JavaScript files are currently supported. TypeScript files cannot be
+    /// bundled by this macro at this time.
+    ///
     /// # Examples
+    ///
+    /// Bundle a single JavaScript entry point:
     ///
     /// ```rust
     /// # #[cfg(any())]
     /// # fn __no_run() {
     /// pub const APP: Artifact<Bundle> = mbed::js::bundle!("../frontend/app.js");
+    ///
+    /// let code = APP.code();
+    /// let sourcemap = APP.sourcemap();
+    /// # }
+    /// ```
+    ///
+    /// Bundle multiple JavaScript files:
+    ///
+    /// ```rust
+    /// # #[cfg(any())]
+    /// # fn __no_run() {
+    /// pub const APP: Artifact<Bundle> = mbed::js::bundle![
+    ///     "../frontend/vendor.js",
+    ///     "../frontend/app.js",
+    /// ];
     ///
     /// let code = APP.code();
     /// let sourcemap = APP.sourcemap();
