@@ -842,8 +842,9 @@ pub mod image {
     /// ```rust
     /// # #[cfg(any())]
     /// # fn __no_run() {
+    /// # __ {
     /// resize: Scale(0.75)
-    /// # }
+    /// # }}
     /// ```
     ///
     /// Or to exact dimensions:
@@ -851,12 +852,13 @@ pub mod image {
     /// ```rust
     /// # #[cfg(any())]
     /// # fn __no_run() {
+    /// # __ {
     /// resize: Exact {
     ///     width: 1024,
     ///     height: 1024,
     ///     keep_aspect_ratio: false,
     /// }
-    /// # }
+    /// # }}
     /// ```
     ///
     /// When `keep_aspect_ratio` is enabled, the image is resized to fit within the
