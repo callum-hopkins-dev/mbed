@@ -1,0 +1,19 @@
+[package]
+name = "mbed-css"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+mbed-macros = { version = "0.1.0", path = "../mbed-macros" }
+nom = { version = "8.0.0", optional = true }
+tanager = "0.3.0"
+thiserror = "2.0.18"
+walkdir = { version = "2.5.0", optional = true }
+which = { version = "8.0.3", optional = true }
+
+[features]
+tailwindcss = ["dep:nom", "dep:walkdir", "dep:which"]
+cargo-progress = ["mbed-macros/cargo-progress"]
