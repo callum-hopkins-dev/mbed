@@ -1,7 +1,7 @@
 [package]
 name = "mbed-image"
 description = "Embed and transform assets into your Rust crate."
-version = "0.1.3"
+version = "0.1.4"
 authors = ["Callum Hopkins"]
 edition = "2024"
 license = "MIT"
@@ -22,7 +22,7 @@ proc-macro = true
 [dependencies]
 error = "0.1.9"
 image = "0.25.10"
-mbed-macros = { version = "0.1.3", path = "../mbed-macros" }
+mbed-macros = { version = "0.1.4", path = "../mbed-macros" }
 proc-macro2 = { version = "1.0.106", default-features = false }
 quote = { version = "1.0.45", default-features = false }
 serde = { version = "1.0.228", features = ["derive"] }
