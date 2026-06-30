@@ -35,7 +35,7 @@ pub fn proc_macro(item: proc_macro::TokenStream) -> proc_macro::TokenStream {
             );
         }
 
-        deps.track_files(&sources);
+        deps.track_files(sources.iter().map(|x| input.0.join(x)));
 
         let output = Command::new(which::which("tailwindcss")?)
             .arg("--input")
