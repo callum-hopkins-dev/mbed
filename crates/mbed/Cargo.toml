@@ -1,7 +1,7 @@
 [package]
 name = "mbed"
 description = "Embed and transform assets into your Rust crate."
-version = "0.1.4"
+version = "0.1.5"
 authors = ["Callum Hopkins"]
 edition = "2024"
 license = "MIT"
@@ -19,10 +19,10 @@ categories = [
 [dependencies]
 const-hex = { version = "1.19.1", default-features = false }
 constcat = { version = "0.6.1", optional = true }
-mbed-core = { version = "0.1.4", path = "../mbed-core", optional = true }
-mbed-image = { version = "0.1.4", path = "../mbed-image", optional = true }
-mbed-css = { version = "0.1.4", path = "../mbed-css", optional = true }
-mbed-js = { version = "0.1.4", path = "../mbed-js", optional = true }
+mbed-core = { version = "0.1.5", path = "../mbed-core", optional = true }
+mbed-image = { version = "0.1.5", path = "../mbed-image", optional = true }
+mbed-css = { version = "0.1.5", path = "../mbed-css", optional = true }
+mbed-js = { version = "0.1.5", path = "../mbed-js", optional = true }
 serde = { version = "1.0.228", optional = true, features = ["derive"] }
 
 [features]
