@@ -251,17 +251,18 @@ impl Dependencies {
     where
         P: AsRef<Path>,
     {
-        self.tracked_files.insert(
-            path.as_ref().into(),
-            WalkDir::new(&path)
+        if let Ok(path) = path.as_ref().canonicalize() {
+            let timestamp = WalkDir::new(&path)
                 .follow_links(true)
                 .into_iter()
                 .filter_map(|x| x.ok())
                 .filter_map(|x| x.metadata().ok())
                 .filter_map(|x| x.modified().ok())
                 .max()
-                .unwrap_or_else(SystemTime::now),
-        );
+                .unwrap_or_else(SystemTime::now);
+
+            self.tracked_files.insert(path.into_boxed_path(), timestamp);
+        }
     }
 
     fn is_dirty(&self) -> bool {
