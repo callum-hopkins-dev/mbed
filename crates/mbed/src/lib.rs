@@ -637,7 +637,10 @@ macro_rules! manifest {
         $crate::collect!($($tt)*);
 
         const MANIFEST: $crate::__macro::Manifest = {
-            const BUCKET_LEN: usize = 1 << __ARTIFACTS.len().ilog2() as usize;
+            const BUCKET_LEN: usize = match __ARTIFACTS.len().checked_ilog2() {
+                Some(x) => 1 << x as usize,
+                None => 0,  
+            };
 
             const ENTRIES_LEN: usize = {
                 let mut entries_len = [0usize; BUCKET_LEN];
