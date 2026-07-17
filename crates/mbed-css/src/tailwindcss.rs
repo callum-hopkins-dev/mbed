@@ -1,4 +1,6 @@
-use std::{borrow::Cow::Borrowed, io::Write, process::Command, string::FromUtf8Error};
+use std::{
+    borrow::Cow::Borrowed, io::Write, path::PathBuf, process::Command, string::FromUtf8Error,
+};
 
 use mbed_macros::{Artifact, LocalFile, Writer};
 use nom::{
@@ -35,7 +37,13 @@ pub fn proc_macro(item: proc_macro::TokenStream) -> proc_macro::TokenStream {
             );
         }
 
-        deps.track_files(sources.iter().map(|x| input.0.join(x)));
+        deps.track_files(sources.iter().map(|x| {
+            input
+                .0
+                .parent()
+                .map(|p| p.join(x))
+                .unwrap_or_else(|| PathBuf::from(x))
+        }));
 
         let output = Command::new(which::which("tailwindcss")?)
             .arg("--input")
