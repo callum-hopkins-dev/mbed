@@ -1,4 +1,9 @@
-use std::{borrow::Cow::Borrowed, io::Write, ops::Deref};
+use std::{
+    borrow::Cow::{self, Borrowed},
+    io::Write,
+    ops::Deref,
+    sync::Arc,
+};
 
 use mbed_macros::{Artifact, LocalFile, Text, Writer};
 use proc_macro2::TokenStream;
@@ -6,6 +11,10 @@ use quote::{ToTokens, quote};
 use rolldown::{
     Bundler, BundlerOptions, CodeSplittingMode, CommentsOptions, InputItem, OutputFormat,
     RawMinifyOptions, SourceMapType, TreeshakeOptions,
+    plugin::{
+        HookResolveIdArgs, HookResolveIdOutput, HookResolveIdReturn, HookUsage, Plugin,
+        PluginContext,
+    },
 };
 use rolldown_common::Output;
 use rolldown_error::BatchedBuildDiagnostic;
@@ -14,32 +23,35 @@ use tanager::Parse;
 
 pub fn proc_macro(item: proc_macro::TokenStream) -> proc_macro::TokenStream {
     mbed_macros::execute_fn(item.into(), |deps, input: Input| -> Result<_, Error> {
-        let mut bundler = Bundler::new(BundlerOptions {
-            input: Some(
-                input
-                    .iter()
-                    .filter_map(|x| x.to_str())
-                    .map(|x| InputItem {
-                        import: x.to_owned(),
-                        ..Default::default()
-                    })
-                    .collect(),
-            ),
+        let mut bundler = Bundler::with_plugins(
+            BundlerOptions {
+                input: Some(
+                    input
+                        .iter()
+                        .filter_map(|x| x.to_str())
+                        .map(|x| InputItem {
+                            import: x.to_owned(),
+                            ..Default::default()
+                        })
+                        .collect(),
+                ),
 
-            treeshake: TreeshakeOptions::Boolean(true),
-            minify: Some(RawMinifyOptions::Bool(true)),
-            sourcemap: Some(SourceMapType::Hidden),
-            format: Some(OutputFormat::Iife),
-            code_splitting: Some(CodeSplittingMode::Bool(false)),
+                treeshake: TreeshakeOptions::Boolean(true),
+                minify: Some(RawMinifyOptions::Bool(true)),
+                sourcemap: Some(SourceMapType::Hidden),
+                format: Some(OutputFormat::Iife),
+                code_splitting: Some(CodeSplittingMode::Bool(false)),
 
-            comments: Some(CommentsOptions {
-                legal: true,
-                annotation: false,
-                jsdoc: false,
-            }),
+                comments: Some(CommentsOptions {
+                    legal: true,
+                    annotation: false,
+                    jsdoc: false,
+                }),
 
-            ..Default::default()
-        })?;
+                ..Default::default()
+            },
+            vec![Arc::new(PreserveDynamicImports)],
+        )?;
 
         let bundle = tokio::runtime::LocalRuntime::new()?.block_on(bundler.generate())?;
 
@@ -194,5 +206,38 @@ impl ToTokens for Bundle {
             &BUNDLE
         }}
         .to_tokens(tokens);
+    }
+}
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+struct PreserveDynamicImports;
+
+impl Plugin for PreserveDynamicImports {
+    fn name(&self) -> Cow<'static, str> {
+        Cow::Borrowed("preserve-dynamic-imports")
+    }
+
+    async fn resolve_id(
+        &self,
+        _ctx: &PluginContext,
+        args: &HookResolveIdArgs<'_>,
+    ) -> HookResolveIdReturn {
+        let result = if args.kind.is_dynamic() {
+            Some(HookResolveIdOutput {
+                id: args.specifier.into(),
+                external: Some(true.into()),
+                normalize_external_id: Some(false),
+
+                ..Default::default()
+            })
+        } else {
+            None
+        };
+
+        Ok(result)
+    }
+
+    fn register_hook_usage(&self) -> HookUsage {
+        HookUsage::ResolveId
     }
 }
