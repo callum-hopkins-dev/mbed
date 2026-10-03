@@ -21,15 +21,15 @@ proc-macro = true
 
 [dependencies]
 mbed-macros = { version = "0.1.8", path = "../mbed-macros" }
-proc-macro2 = { version = "1.0.106", default-features = false }
-quote = { version = "1.0.45", default-features = false }
-rolldown = { version = "1.1.1", optional = true, default-features = false }
-rolldown_common = { version = "1.1.1", default-features = false, optional = true }
-rolldown_error = { version = "1.1.1", optional = true }
-serde = { version = "1.0.228", features = ["derive"] }
+proc-macro2 = { version = "1.0.107", default-features = false }
+quote = { version = "1.0.47", default-features = false }
+rolldown = { version = "1.2.12", optional = true, default-features = false }
+rolldown_common = { version = "1.2.12", default-features = false, optional = true }
+rolldown_error = { version = "1.2.12", optional = true }
+serde = { version = "1.0.229", features = ["derive"] }
 tanager = "0.3.0"
-thiserror = "2.0.18"
-tokio = { version = "1.52.3", optional = true, features = ["rt"] }
+thiserror = "2.0.21"
+tokio = { version = "1.53.2", optional = true, features = ["rt"] }
 
 [features]
 default = ["bundle"]

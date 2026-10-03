@@ -23,11 +23,11 @@ proc-macro = true
 error = "0.1.9"
 image = "0.25.10"
 mbed-macros = { version = "0.1.8", path = "../mbed-macros" }
-proc-macro2 = { version = "1.0.106", default-features = false }
-quote = { version = "1.0.45", default-features = false }
-serde = { version = "1.0.228", features = ["derive"] }
+proc-macro2 = { version = "1.0.107", default-features = false }
+quote = { version = "1.0.47", default-features = false }
+serde = { version = "1.0.229", features = ["derive"] }
 tanager = "0.3.0"
-thiserror = "2.0.18"
+thiserror = "2.0.21"
 
 [features]
 cargo-progress = [ "mbed-macros/cargo-progress" ]

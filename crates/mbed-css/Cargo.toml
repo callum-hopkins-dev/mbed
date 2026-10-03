@@ -23,9 +23,9 @@ proc-macro = true
 mbed-macros = { version = "0.1.8", path = "../mbed-macros" }
 nom = { version = "8.0.0", optional = true }
 tanager = "0.3.0"
-thiserror = "2.0.18"
+thiserror = "2.0.21"
 walkdir = { version = "2.5.0", optional = true }
-which = { version = "8.0.3", optional = true }
+which = { version = "8.0.6", optional = true }
 
 [features]
 tailwindcss = ["dep:nom", "dep:walkdir", "dep:which"]
