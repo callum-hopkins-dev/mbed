@@ -2,7 +2,6 @@ use std::{
     borrow::Cow::{self, Borrowed},
     io::Write,
     ops::Deref,
-    sync::Arc,
 };
 
 use mbed_macros::{Artifact, LocalFile, Text, Writer};
@@ -13,7 +12,7 @@ use rolldown::{
     RawMinifyOptions, SourceMapType, TreeshakeOptions,
     plugin::{
         HookResolveIdArgs, HookResolveIdOutput, HookResolveIdReturn, HookUsage, Plugin,
-        PluginContext,
+        PluginContext, Pluginable,
     },
 };
 use rolldown_common::Output;
@@ -50,7 +49,7 @@ pub fn proc_macro(item: proc_macro::TokenStream) -> proc_macro::TokenStream {
 
                 ..Default::default()
             },
-            vec![Arc::new(PreserveDynamicImports)],
+            vec![Pluginable::new_shared(PreserveDynamicImports)],
         )?;
 
         let bundle = tokio::runtime::LocalRuntime::new()?.block_on(bundler.generate())?;
